@@ -1,3 +1,10 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "meds-empty-state",
+      "description": "An image of a bottle of pills for the empty state of the medication list.",
+      "imageUrl": "https://picsum.photos/seed/meds/200/200",
+      "imageHint": "pills bottle"
+    }
+  ]
 }
