@@ -13,9 +13,9 @@ export function MedicationList() {
 
   if (isLoading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[...Array(3)].map((_, i) => (
-          <Skeleton key={i} className="h-64 w-full" />
+      <div className="space-y-4">
+        {[...Array(2)].map((_, i) => (
+          <Skeleton key={i} className="h-24 w-full" />
         ))}
       </div>
     );
@@ -23,19 +23,19 @@ export function MedicationList() {
 
   if (medications.length === 0) {
     return (
-      <div className="text-center py-16 px-6 border-2 border-dashed rounded-lg mt-8">
+      <div className="text-center py-8 px-4 border-2 border-dashed rounded-lg">
         {emptyStateImage && 
             <Image 
                 src={emptyStateImage.imageUrl} 
                 alt={emptyStateImage.description} 
-                width={150} 
-                height={150} 
-                className="mx-auto rounded-full mb-6 opacity-70" 
+                width={80} 
+                height={80} 
+                className="mx-auto rounded-full mb-4 opacity-70" 
                 data-ai-hint={emptyStateImage.imageHint} 
             />
         }
-        <h2 className="text-2xl font-headline font-semibold">No Medications Yet</h2>
-        <p className="text-muted-foreground mt-2">Click "Add Medication" to get started.</p>
+        <h3 className="text-lg font-headline font-semibold">No Medications</h3>
+        <p className="text-muted-foreground text-sm mt-1">Click "Add Medication" to start.</p>
       </div>
     );
   }
@@ -49,7 +49,7 @@ export function MedicationList() {
   });
 
   return (
-    <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-4">
       {sortedMedications.map((med) => (
         <MedicationCard key={med.id} medication={med} onToggleDose={toggleDose} />
       ))}

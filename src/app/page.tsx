@@ -13,9 +13,10 @@ import {
 import { MedicationForm } from "@/components/medication-form";
 import { MedicationList } from "@/components/medication-list";
 import { useMedications } from "@/hooks/use-medications";
-import type { z } from "zod";
 import { Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronRight } from "lucide-react";
 
 // A little hack to get the Zod schema type without a direct import
 type MedicationFormValues = Parameters<ReturnType<typeof useMedications>['addMedication']>[0];
@@ -43,10 +44,20 @@ export default function Home() {
                 </SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton href="#" isActive>
-                            <List />
-                            Current Treatments
-                        </SidebarMenuButton>
+                      <Collapsible defaultOpen>
+                          <CollapsibleTrigger className="w-full">
+                              <SidebarMenuButton href="#" isActive>
+                                  <List />
+                                  Current Treatments
+                                  <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
+                              </SidebarMenuButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                              <div className="p-2 pl-4">
+                                <MedicationList />
+                              </div>
+                          </CollapsibleContent>
+                      </Collapsible>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </ScrollArea>
@@ -67,7 +78,7 @@ export default function Home() {
         </header>
 
         <main className="container mx-auto p-4 md:p-6">
-            <MedicationList />
+            <p className="text-center text-muted-foreground">Select a medication from the sidebar to see details or add a new one.</p>
         </main>
       </SidebarInset>
 
