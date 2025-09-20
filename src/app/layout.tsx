@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ServiceWorkerRegistrar } from '@/components/service-worker-registrar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 export const metadata: Metadata = {
   title: 'DoseWise',
@@ -21,9 +22,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <ServiceWorkerRegistrar />
-        {children}
-        <Toaster />
+        <SidebarProvider>
+          <ServiceWorkerRegistrar />
+          {children}
+          <Toaster />
+        </SidebarProvider>
       </body>
     </html>
   );
