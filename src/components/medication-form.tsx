@@ -117,7 +117,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
               <FormItem>
                 <FormLabel>Dosage</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" inputMode="numeric" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,7 +129,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Unit</FormLabel>
-                <Select onValuechange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a unit" />
@@ -155,7 +155,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
               <FormItem>
                 <FormLabel>Interval (hours)</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" inputMode="numeric" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,7 +168,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
               <FormItem>
                 <FormLabel>Duration (days)</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" inputMode="numeric" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
