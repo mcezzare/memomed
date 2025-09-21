@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { List, PlusCircle, Users, ChevronRight, Download } from "lucide-react";
+import { List, PlusCircle, Users, ChevronRight, Download, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -99,6 +99,12 @@ export default function Home() {
                         Install App
                     </SidebarMenuButton>
                  </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => window.location.reload()}>
+                    <RefreshCw />
+                    Refresh
+                </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                  <Collapsible>
