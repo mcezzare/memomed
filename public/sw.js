@@ -1,5 +1,5 @@
 // Define a unique cache name for your application resources.
-const CACHE_NAME = 'dosewise-cache-v1';
+const CACHE_NAME = 'MemoMed-cache-v1';
 // List all the assets that need to be cached for offline use.
 const urlsToCache = [
   '/',

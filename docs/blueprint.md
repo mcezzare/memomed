@@ -1,4 +1,4 @@
-# **App Name**: DoseWise
+# **App Name**: MemoMed
 
 ## Core Features:
 

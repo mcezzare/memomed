@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Medication, Dose, DosageUnit } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 
-const STORAGE_KEY = 'dosewise-medications';
+const STORAGE_KEY = 'MemoMed-medications';
 
 type NewMedication = {
     name: string;

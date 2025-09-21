@@ -1,6 +1,6 @@
 {
-  "name": "DoseWise",
-  "short_name": "DoseWise",
+  "name": "MemoMed",
+  "short_name": "MemoMed",
   "description": "Your personal medication scheduler",
   "start_url": "/",
   "display": "standalone",

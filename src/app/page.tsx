@@ -59,7 +59,7 @@ export default function Home() {
             <SidebarHeader>
               <div className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-primary"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
-                <h1 className="text-xl font-bold font-headline text-foreground">DoseWise</h1>
+                <h1 className="text-xl font-bold font-headline text-foreground">MemoMed</h1>
               </div>
             </SidebarHeader>
             <SidebarMenu>
@@ -115,7 +115,7 @@ export default function Home() {
           {people.length === 0 ? (
             <div className="text-center text-muted-foreground pt-10">
                 <Users className="mx-auto h-12 w-12 opacity-50 mb-4" />
-                <h2 className="text-xl font-semibold">Welcome to DoseWise!</h2>
+                <h2 className="text-xl font-semibold">Welcome to MemoMed!</h2>
                 <p>Start by adding a profile for yourself or a family member.</p>
                 <Button className="mt-4" onClick={() => setIsAddPersonDialogOpen(true)}>
                     <PlusCircle className="mr-2 h-4 w-4" />
