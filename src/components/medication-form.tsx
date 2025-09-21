@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Person } from "@/lib/types";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   personId: z.string().min(1, { message: "Please select a person." }),
@@ -38,22 +39,35 @@ type MedicationFormProps = {
   onClose: () => void;
 };
 
+const defaultValues = {
+  name: "",
+  dosage: 1,
+  dosageUnit: 'capsule' as const,
+  intervalHours: 8,
+  durationDays: 7,
+};
+
 export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: MedicationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      ...defaultValues,
       personId: selectedPersonId || (people.length > 0 ? people[0].id : ""),
-      name: "",
-      dosage: 1,
-      dosageUnit: 'capsule',
-      intervalHours: 8,
-      durationDays: 7,
     },
   });
 
+  useEffect(() => {
+    if (selectedPersonId) {
+      form.setValue('personId', selectedPersonId);
+    }
+  }, [selectedPersonId, form]);
+
   function handleFormSubmit(values: z.infer<typeof formSchema>) {
     onSubmit(values);
-    form.reset();
+    form.reset({
+        ...defaultValues,
+        personId: values.personId
+    });
   }
 
   return (
@@ -65,7 +79,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
           render={({ field }) => (
             <FormItem>
               <FormLabel>For Whom?</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a person" />
@@ -115,7 +129,7 @@ export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: 
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Unit</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValuechange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a unit" />
