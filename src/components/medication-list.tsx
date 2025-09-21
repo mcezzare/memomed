@@ -5,11 +5,18 @@ import { MedicationCard } from "./medication-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
+import type { Person } from "@/lib/types";
 
-export function MedicationList() {
+type MedicationListProps = {
+    selectedPersonId?: string;
+}
+
+
+export function MedicationList({ selectedPersonId }: MedicationListProps) {
   const { medications, isLoading, toggleDose } = useMedications();
   const emptyStateImage = PlaceHolderImages.find(img => img.id === 'meds-empty-state');
 
+  const filteredMedications = selectedPersonId ? medications.filter(m => m.personId === selectedPersonId) : medications;
 
   if (isLoading) {
     return (
@@ -21,7 +28,7 @@ export function MedicationList() {
     );
   }
 
-  if (medications.length === 0) {
+  if (filteredMedications.length === 0) {
     return (
       <div className="text-center py-8 px-4 border-2 border-dashed rounded-lg">
         {emptyStateImage && 
@@ -40,7 +47,7 @@ export function MedicationList() {
     );
   }
 
-  const sortedMedications = [...medications].sort((a, b) => {
+  const sortedMedications = [...filteredMedications].sort((a, b) => {
     const aComplete = a.doses.filter(d => d.takenAt).length === a.totalDoses;
     const bComplete = b.doses.filter(d => d.takenAt).length === b.totalDoses;
     if (aComplete && !bComplete) return 1;

@@ -6,8 +6,14 @@ export type Dose = {
   takenAt?: number;
 };
 
+export type Person = {
+  id: string;
+  name: string;
+};
+
 export type Medication = {
   id: string;
+  personId: string;
   name: string;
   dosage: number;
   dosageUnit: DosageUnit;

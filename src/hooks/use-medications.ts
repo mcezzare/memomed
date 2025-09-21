@@ -12,6 +12,7 @@ type NewMedication = {
     dosageUnit: DosageUnit;
     intervalHours: number;
     durationDays: number;
+    personId: string;
 }
 
 export function useMedications() {

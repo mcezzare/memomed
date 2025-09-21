@@ -20,8 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { Person } from "@/lib/types";
 
 const formSchema = z.object({
+  personId: z.string().min(1, { message: "Please select a person." }),
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   dosage: z.coerce.number().positive({ message: "Dosage must be positive." }),
   dosageUnit: z.enum(['mL', 'drop', 'capsule']),
@@ -30,14 +32,17 @@ const formSchema = z.object({
 });
 
 type MedicationFormProps = {
+  people: Person[];
+  selectedPersonId?: string;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
   onClose: () => void;
 };
 
-export function MedicationForm({ onSubmit, onClose }: MedicationFormProps) {
+export function MedicationForm({ people, selectedPersonId, onSubmit, onClose }: MedicationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      personId: selectedPersonId || (people.length > 0 ? people[0].id : ""),
       name: "",
       dosage: 1,
       dosageUnit: 'capsule',
@@ -54,6 +59,28 @@ export function MedicationForm({ onSubmit, onClose }: MedicationFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="personId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>For Whom?</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a person" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {people.map(person => (
+                    <SelectItem key={person.id} value={person.id}>{person.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="name"
