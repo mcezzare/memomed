@@ -5,7 +5,7 @@ import { ServiceWorkerRegistrar } from '@/components/service-worker-registrar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 export const metadata: Metadata = {
-  title: 'DoseWise',
+  title: 'MemoMed',
   description: 'Your personal medication scheduler',
   manifest: '/manifest.json',
 };
