@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Person } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 
-const PEOPLE_STORAGE_KEY = 'dosewise-people';
-const SELECTED_PERSON_STORAGE_KEY = 'dosewise-selected-person';
+const PEOPLE_STORAGE_KEY = 'memomed-people';
+const SELECTED_PERSON_STORAGE_KEY = 'memomed-selected-person';
 
 export function usePeople() {
   const [people, setPeople] = useState<Person[]>([]);
