@@ -5,7 +5,6 @@ import { MedicationCard } from "./medication-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
-import type { Person } from "@/lib/types";
 
 type MedicationListProps = {
     selectedPersonId?: string;
@@ -13,7 +12,7 @@ type MedicationListProps = {
 
 
 export function MedicationList({ selectedPersonId }: MedicationListProps) {
-  const { medications, isLoading, toggleDose } = useMedications();
+  const { medications, isLoading, toggleDose, removeMedication } = useMedications();
   const emptyStateImage = PlaceHolderImages.find(img => img.id === 'meds-empty-state');
 
   const filteredMedications = selectedPersonId ? medications.filter(m => m.personId === selectedPersonId) : medications;
@@ -58,7 +57,12 @@ export function MedicationList({ selectedPersonId }: MedicationListProps) {
   return (
     <div className="grid gap-4">
       {sortedMedications.map((med) => (
-        <MedicationCard key={med.id} medication={med} onToggleDose={toggleDose} />
+        <MedicationCard 
+            key={med.id} 
+            medication={med} 
+            onToggleDose={toggleDose}
+            onRemove={removeMedication}
+        />
       ))}
     </div>
   );

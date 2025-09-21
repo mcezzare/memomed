@@ -29,6 +29,18 @@ const scheduleNotification = (medicationName: string, dosage: number, dosageUnit
     }
 }
 
+const cancelNotifications = (doses: Dose[]) => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        const doseIds = doses.map(d => d.id);
+        navigator.serviceWorker.controller.postMessage({
+            type: 'CANCEL_NOTIFICATIONS',
+            payload: {
+                ids: doseIds,
+            }
+        });
+    }
+}
+
 export function useMedications() {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -110,6 +122,22 @@ export function useMedications() {
     });
   }, [medications, saveMedications, toast]);
 
+  const removeMedication = useCallback((medicationId: string) => {
+    const medToRemove = medications.find(m => m.id === medicationId);
+    if (!medToRemove) return;
+
+    // Cancel any scheduled notifications
+    cancelNotifications(medToRemove.doses);
+
+    const newMedications = medications.filter(med => med.id !== medicationId);
+    saveMedications(newMedications);
+
+    toast({
+        title: 'Medication Removed',
+        description: `${medToRemove.name} has been removed from your schedule.`,
+    });
+  }, [medications, saveMedications, toast]);
+
   const updateMedication = useCallback((updatedMed: Medication) => {
     const newMedications = medications.map(med => med.id === updatedMed.id ? updatedMed : med);
     saveMedications(newMedications);
@@ -133,5 +161,5 @@ export function useMedications() {
     updateMedication(updatedMed);
   }, [medications, updateMedication]);
 
-  return { medications, isLoading, addMedication, toggleDose };
+  return { medications, isLoading, addMedication, removeMedication, toggleDose };
 }

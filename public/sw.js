@@ -4,11 +4,10 @@ const urlsToCache = [
   '/manifest.json',
   '/icon-192x192.png',
   '/icon-512x512.png',
-  // Add other assets like CSS, JS, and images if you have them
+  // Add other assets and pages you want to cache
 ];
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -31,18 +30,27 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
-    if (event.data.type === 'SCHEDULE_NOTIFICATION') {
-        const { medicationName, dose, scheduledAt, id } = event.data.payload;
-        const delay = scheduledAt - Date.now();
+  if (event.data.type === 'SCHEDULE_NOTIFICATION') {
+    const { medicationName, dose, scheduledAt, id } = event.data.payload;
+    const delay = scheduledAt - Date.now();
 
-        if (delay > 0) {
-            setTimeout(() => {
-                self.registration.showNotification('Hora do Medicamento!', {
-                    body: `Está na hora de tomar seu ${medicationName} (${dose}).`,
-                    icon: '/icon-192x192.png',
-                    tag: id
-                });
-            }, delay);
-        }
+    if (delay > 0) {
+      setTimeout(() => {
+        self.registration.showNotification('Time for your medication!', {
+          body: `Take ${dose} of ${medicationName}.`,
+          icon: '/icon-192x192.png',
+          tag: id,
+        });
+      }, delay);
     }
+  } else if (event.data.type === 'CANCEL_NOTIFICATIONS') {
+    const { ids } = event.data.payload;
+    self.registration.getNotifications().then(notifications => {
+        notifications.forEach(notification => {
+            if (ids.includes(notification.tag)) {
+                notification.close();
+            }
+        });
+    });
+  }
 });
