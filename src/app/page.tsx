@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { List, PlusCircle, Users, ChevronRight } from "lucide-react";
+import { List, PlusCircle, Users, ChevronRight, Download } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,6 +91,30 @@ export default function Home() {
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </Collapsible>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                 <Link href="/install" passHref>
+                    <SidebarMenuButton>
+                        <Download />
+                        Install App
+                    </SidebarMenuButton>
+                 </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                 <Collapsible>
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton className="w-full">
+                            <List />
+                            Current Treatments
+                            <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <div className="p-2">
+                            <MedicationList selectedPersonId={selectedPersonId} />
+                        </div>
+                    </CollapsibleContent>
+                 </Collapsible>
               </SidebarMenuItem>
             </SidebarMenu>
           </ScrollArea>
