@@ -65,8 +65,8 @@ export default function Home() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <Collapsible defaultOpen>
-                  <CollapsibleTrigger className="w-full">
-                    <SidebarMenuButton>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton className="w-full">
                       <Users />
                       Profiles
                       <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
