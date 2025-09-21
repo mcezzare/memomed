@@ -1,70 +1,41 @@
-// This is a basic service worker that allows the app to work offline.
-
+// Define a unique cache name for your application resources.
 const CACHE_NAME = 'dosewise-cache-v1';
+// List all the assets that need to be cached for offline use.
 const urlsToCache = [
   '/',
   '/manifest.json',
-  // Next.js build files will be added to this list dynamically during the build process.
-  // For development, we can manually add some core assets if needed,
-  // but for a production build, this would be populated by a build script.
+  '/icon-192x192.png',
+  '/icon-512x512.png',
+  // Next.js build files will be added to this list by the build process,
+  // but for development and to ensure core files are cached, we specify them.
+  // Note: In a real build, these paths would be dynamically generated.
 ];
 
-// Install the service worker and cache important assets
-self.addEventListener('install', (event) => {
+// Install event: This is triggered when the service worker is first installed.
+self.addEventListener('install', event => {
+  // waitUntil() ensures that the service worker will not be considered installed
+  // until the code inside it has finished executing.
   event.waitUntil(
+    // Open a cache by name.
     caches.open(CACHE_NAME)
-      .then((cache) => {
+      .then(cache => {
         console.log('Opened cache');
-        // It's tricky to cache Next.js assets which have hashes in their names.
-        // A more robust solution would involve integrating with the build process.
-        // For now, we cache the essentials.
+        // Add all specified URLs to the cache.
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-// Intercept network requests and serve from cache if available
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-
-        // Clone the request because it's a stream and can only be consumed once.
-        const fetchRequest = event.request.clone();
-
-        return fetch(fetchRequest).then(
-          (response) => {
-            // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clone the response because it's a stream and can only be consumed once.
-            const responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          }
-        );
-      })
-  );
-});
-
-// Clean up old caches
-self.addEventListener('activate', (event) => {
+// Activate event: This is triggered after the installation is successful.
+// It's a good place to clean up old caches.
+self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    // Get all cache keys (cache names).
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
+        cacheNames.map(cacheName => {
+          // If a cache is not in our whitelist, delete it.
           if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
@@ -72,4 +43,42 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+});
+
+// Fetch event: This is triggered for every request the page makes.
+// It allows us to intercept the request and respond with cached assets if available.
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    // Check if the request is in the cache.
+    caches.match(event.request)
+      .then(response => {
+        // If a cached response is found, return it.
+        if (response) {
+          return response;
+        }
+        // If not found in cache, fetch it from the network.
+        return fetch(event.request);
+      }
+    )
+  );
+});
+
+
+// Notification Scheduling Logic
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SCHEDULE_NOTIFICATION') {
+    const { medicationName, dose, scheduledAt } = event.data.payload;
+    const now = Date.now();
+    const delay = scheduledAt - now;
+
+    if (delay > 0) {
+      setTimeout(() => {
+        self.registration.showNotification('Time for your medication!', {
+          body: `It's time to take ${dose} of ${medicationName}.`,
+          icon: '/icon-192x192.png',
+          badge: '/icon-192x192.png'
+        });
+      }, delay);
+    }
+  }
 });

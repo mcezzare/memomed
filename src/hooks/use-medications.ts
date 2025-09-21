@@ -15,6 +15,20 @@ type NewMedication = {
     personId: string;
 }
 
+const scheduleNotification = (medicationName: string, dosage: number, dosageUnit: string, dose: Dose) => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'SCHEDULE_NOTIFICATION',
+            payload: {
+                medicationName: medicationName,
+                dose: `${dosage} ${dosageUnit}`,
+                scheduledAt: dose.scheduledAt,
+                id: dose.id,
+            }
+        });
+    }
+}
+
 export function useMedications() {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,22 +87,21 @@ export function useMedications() {
     
     saveMedications([...medications, newMedication]);
     
-    if ('Notification' in window) {
-        if (Notification.permission === 'granted') {
-             new Notification('Medication Added!', {
-                body: `You've added ${med.name}. We'll remind you!`,
-                icon: '/icon-192x192.png'
-            });
-        } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    new Notification('Medication Added!', {
-                        body: `You've added ${med.name}. We'll remind you!`,
-                        icon: '/icon-192x192.png'
-                    });
-                }
-            });
-        }
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                 new Notification('Medication Added!', {
+                    body: `You've added ${med.name}. We'll remind you!`,
+                    icon: '/icon-192x192.png'
+                });
+                // Schedule all future doses
+                newMedication.doses.forEach(dose => {
+                    if (dose.scheduledAt > Date.now()) {
+                        scheduleNotification(newMedication.name, newMedication.dosage, newMedication.dosageUnit, dose);
+                    }
+                });
+            }
+        });
     }
 
     toast({
